@@ -1,26 +1,17 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestStack.White;
-using TestStack.White.AutomationElementSearch;
-using TechTalk.SpecFlow;
 using TestStack.White.UIItems.WindowStripControls;
 using TestStack.White.UIItems.MenuItems;
 using TestStack.White.UIItems.ListBoxItems;
 using TestStack.White.UIItems;
-using TestStack.White.Configuration;
 using TestStack.White.UIItems.WindowItems;
 using TestStack.White.UIItems.Finders;
 using System.Threading;
-using System.Linq.Expressions;
-using System.Windows.Automation;
 using System.Drawing;
-using System.Windows.Automation;
 using System.Drawing.Imaging;
-using System.Reflection;
 using TestStack.White.Utility;
-using TestStack.White.UIItems.Actions;
 using System.Windows;
-using TestStack.White.UIA;
+using System.Windows.Automation;
 
 namespace TestingProjectForWhite
 
@@ -44,39 +35,28 @@ namespace TestingProjectForWhite
             return win.IsCurrentlyActive;
         }
 
-        public TestStack.White.UIItems.Button getButtonByText(String button_text)
+        public Button getButtonByText(String button_text)
         {
 
-            var buttons = extensionClass.GetMultipleWithWait(win, 
-                TestStack.White.UIItems.Finders.SearchCriteria.ByControlType(System.Windows.Automation.ControlType.Button));
-            //Condition x = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button);
-            //var buttons2 = win.AutomationElement.FindAll(TreeScope.Children,x);
-            //UIItemCollection buttonscoll = new UIItemCollection(buttons2, new NullActionListener());
-            //IUIItem x = win.Get(SearchCriteria.ByAutomationId("131"));
-            //System.Windows.Automation
-            //x.AutomationElement
-            //x.AutomationElement.FindAll()
-            //Console.WriteLine("Count is "+buttons.Count);
-            
-            
+            var buttons = extensionClass.GetMultipleWithWait(win,
+                SearchCriteria.ByControlType(ControlType.Button));
+
             try
             {
                 foreach (TestStack.White.UIItems.Button b in buttons)
                 {
                     if (b.Enabled == true && b.Text.Equals(button_text))
                     {
-                      
-                        try {
-                            Random rnd = new Random();
-                            //this.
-                           
 
-                            Utilities.takeScreenShot((TestStack.White.UIItems.UIItem)b);
-                        }catch(Exception e)
+                        try
                         {
-                            Console.WriteLine(e.Message);  
+                            Random rnd = new Random();
+                            Utilities.takeScreenShot(b);
                         }
-                        //b.AutomationElement.
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
                         return b;
                     }
                 }
@@ -90,9 +70,9 @@ namespace TestingProjectForWhite
         }
         public void pressbuttonByText(String buttonText)
         {
-            
-           Retry.For(() => getButtonByText(buttonText).Click(),TimeSpan.FromSeconds(10));
-                      
+
+            Retry.For(() => getButtonByText(buttonText).Click(), TimeSpan.FromSeconds(10));
+
         }
 
         public String getResultText()
@@ -104,8 +84,8 @@ namespace TestingProjectForWhite
 
         public void changeCalcMode(String mode)
         {
-            MenuBar menus = (MenuBar)win.Get(TestStack.White.UIItems.Finders.SearchCriteria
-                .ByControlType(System.Windows.Automation.ControlType.MenuBar).AndByText("Application"));
+            MenuBar menus = (MenuBar)win.Get(SearchCriteria
+                .ByControlType(ControlType.MenuBar).AndByText("Application"));
 
             if (mode.Equals("Mortgage"))
             {
@@ -124,9 +104,9 @@ namespace TestingProjectForWhite
         public void selectListBox(String listboxName, String value)
         {
             win.WaitWhileBusy();
-            
 
-            var combo = extensionClass.GetMultipleWithWait(win, TestStack.White.UIItems.Finders.SearchCriteria.ByControlType(System.Windows.Automation.ControlType.ComboBox));
+
+            var combo = extensionClass.GetMultipleWithWait(win, SearchCriteria.ByControlType(ControlType.ComboBox));
             foreach (ComboBox c in combo)
             {
                 if (c.NameMatches(listboxName))
@@ -139,24 +119,24 @@ namespace TestingProjectForWhite
 
         public void enterTextByControlName(String textboxname, float textboxvalue)
         {
-            var edit = win.GetMultiple(TestStack.White.UIItems.Finders.SearchCriteria.ByControlType(System.Windows.Automation.ControlType.Edit));           
-            
-           
+            var edit = win.GetMultiple(SearchCriteria.ByControlType(ControlType.Edit));
+
+
             foreach (TextBox t in edit)
             {
                 if (t.NameMatches(textboxname))
                 {
                     t.SetValue(textboxvalue);
-                     
+
                 }
             }
         }
 
-        
+
         public String getTextByControlName(String textboxname)
         {
 
-            var edit = win.GetMultiple(TestStack.White.UIItems.Finders.SearchCriteria.ByControlType(System.Windows.Automation.ControlType.Edit));
+            var edit = win.GetMultiple(SearchCriteria.ByControlType(ControlType.Edit));
             foreach (TextBox t in edit)
             {
                 if (t.NameMatches(textboxname))
@@ -240,7 +220,7 @@ namespace TestingProjectForWhite
                 //getting current directory
                 path = System.AppDomain.CurrentDomain.BaseDirectory;
                 //replaceing the bin and debug as BaseDirectory will return this
-                path = path.Replace("\\bin\\Debug","");
+                path = path.Replace("\\bin\\Debug", "");
                 //creating path with random integer
                 path = path + "results\\Screenshot_" + random + ".jpg";
 
